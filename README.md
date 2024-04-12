@@ -15,7 +15,7 @@ Dans un second temps, il faudra le contrôler grâce à une manette de jeux (en 
 ## Equipe de développement
 
 Composition de 4 personnes pour ce projet :
-- Mateo HUBERT
-- Ziriab HAROUNI
-- Marius DIOMANDE
-- Vincent THOME
+- [Mateo HUBERT](https://github.com/mateohubert2)
+- [Ziriab HAROUNI](https://github.com/harouni-ziriab)
+- [Marius DIOMANDE](https://github.com/DioManDeSaHi)
+- [Vincent THOME](https://github.com/S7VEN-7)
