@@ -17,7 +17,7 @@ Allez simplement à la racine du dossier que vous avez créé pour le projet, re
 ./config.sh
 ```
 
-Après cette ligne de commandes, les dépendances devraient être bien installées.
+Après cette commande, les dépendances devraient être bien installées.
 
 <br>
 
@@ -35,3 +35,8 @@ Et décommenter cette ligne :
 # .\env\Scripts\activate.bat # Windows
 ```
 
+Pour finir, il suffit de rentrer cette commande :
+
+```
+./config.sh
+```
