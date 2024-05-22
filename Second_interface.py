@@ -1,7 +1,8 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel
-from PyQt6.QtGui import QDrag, QFont
-from PyQt6.QtCore import Qt, QMimeData, QPoint, QTimer
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
+from PyQt6.QtGui import QDrag, QFont, QMouseEvent
+from PyQt6.QtCore import Qt, QMimeData, QTimer
+from martypy import Marty, MartyConnectException
 
 class DraggableButton(QPushButton):
     def __init__(self, text, parent=None):
@@ -26,11 +27,11 @@ class DraggableButton(QPushButton):
         self.original_parent = parent
         self.original_position = self.pos()
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QMouseEvent):
         if event.button() == Qt.MouseButton.LeftButton:
             self.drag_start_position = event.pos()
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event: QMouseEvent):
         if not (event.buttons() & Qt.MouseButton.LeftButton):
             return
         if (event.pos() - self.drag_start_position).manhattanLength() < QApplication.startDragDistance():
@@ -42,8 +43,17 @@ class DraggableButton(QPushButton):
         drag.setHotSpot(event.pos() - self.rect().topLeft())
         drop_action = drag.exec(Qt.DropAction.MoveAction)
 
-    def perform_action(self):
+    def perform_action(self, marty):
         print(f"Performing action for {self.text()}")
+        if self.text() == "avancer":
+            marty.walk(num_steps=2)
+        elif self.text() == "reculer":
+            marty.walk(num_steps=2, step_length=-25)
+        elif self.text() == "circle_dance":
+            marty.circle_dance()
+        elif self.text() == "celebrate":
+            marty.celebrate();
+
 
     def reset_position(self):
         self.setParent(self.original_parent)
@@ -83,12 +93,18 @@ class DropArea(QWidget):
                 button.raise_()
 
     def execute_actions(self):
+        try:
+            marty = Marty("wifi", "192.168.0.100", blocking=True)  # replace with the appropriate address for your Marty
+        except MartyConnectException as e:
+            print(f"Failed to connect to Marty: {e}")
+            return
+
         # Sort the buttons by their y-coordinate in ascending order (from top to bottom)
         self.buttons.sort(key=lambda button: button.y())
 
         def perform_next_action(index):
             if index < len(self.buttons):
-                self.buttons[index].perform_action()
+                self.buttons[index].perform_action(marty)
                 QTimer.singleShot(1000, lambda: perform_next_action(index + 1))
 
         perform_next_action(0)
@@ -113,10 +129,11 @@ main_layout = QHBoxLayout(window)
 # Create a vertical layout for the buttons
 button_layout = QVBoxLayout()
 
-# Create 10 buttons and add them to the button layout
+# Create 5 buttons with specified names and add them to the button layout
+button_names = ["avancer", "reculer", "circle_dance", "celebrate"]
 buttons = []
-for i in range(10):
-    button = DraggableButton(f"Bouton {i + 1}")
+for name in button_names:
+    button = DraggableButton(name)
     buttons.append(button)
     button_layout.addWidget(button)
 
