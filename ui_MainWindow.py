@@ -7,10 +7,11 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+from martypy import Marty
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        my_marty = Marty("wifi","192.168.0.3")
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         MainWindow.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
@@ -127,7 +128,20 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
+        def avancer(self):
+            my_marty.walk(2, 'auto', 0)
+        #def reculer(self):
+        #    my_marty.back(2, 'auto', 0)
+        def droite(self):
+            my_marty.sidestep("right", 2)
+        def gauche(self):
+            my_marty.sidestep("left", 2)
 
+        self.up.clicked.connect(avancer)
+        #self.down.clicked.connect(reculer)
+        self.right.clicked.connect(droite)
+        self.left.clicked.connect(gauche)
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
