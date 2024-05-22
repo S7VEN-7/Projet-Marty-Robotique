@@ -19,4 +19,3 @@ Composition de 4 personnes pour ce projet :
 - Ziriab HAROUNI
 - Marius DIOMANDE
 - Vincent THOME
->>>>>>> 8c7dbc495e0ab323e1e1d721867e6fd2af66a7fa
