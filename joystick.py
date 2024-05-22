@@ -1,7 +1,8 @@
 import pygame
 import json, os
+import connexion
 
-class JoystickController:
+class JoystickController ():
     def __init__(self):
         pygame.init()
         self.running = True
@@ -12,7 +13,7 @@ class JoystickController:
         self.joystick = pygame.joystick.Joystick(0)
         self.joystick.init()
 
-        with open(os.path.join(os.path.dirname(__file__), 'ps4_keys.json')) as file:
+        with open(os.path.join(os.path.dirname(__file__), './game_controller/ps4_keys.json')) as file:
             button_keys = json.load(file)
 
         self.joystick_keys = []
@@ -44,6 +45,7 @@ class JoystickController:
             print(self.joystick_keys[event.button])
             if self.joystick_keys[event.button] == "cross":
                 self.joystick_rumble(0.65, 1, 250)
+                connexion.marty.celebrate()
             elif self.joystick_keys[event.button] == "circle":
                 self.joystick_rumble(0, 1, 250)
             elif self.joystick_keys[event.button] == "triangle":
