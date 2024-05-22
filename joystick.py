@@ -45,7 +45,7 @@ class JoystickController ():
             print(self.joystick_keys[event.button])
             if self.joystick_keys[event.button] == "cross":
                 self.joystick_rumble(0.65, 1, 250)
-                connexion.marty.celebrate()
+                connexion.marty.celebrate() # MARTY
             elif self.joystick_keys[event.button] == "circle":
                 self.joystick_rumble(0, 1, 250)
             elif self.joystick_keys[event.button] == "triangle":
