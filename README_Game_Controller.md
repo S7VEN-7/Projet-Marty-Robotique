@@ -9,7 +9,7 @@ Ainsi, afin d'y parvenir il faut créer un environnement virtuel où l'on pourra
 Assurez-vous aussi d'avoir installé le module ***pip*** qui permet d'installer les dépendances.
 
 
-## Instructions pour les utilisateur Linux / Mac
+## Instructions pour les utilisateurs Linux / Mac
 
 Allez simplement à la racine du dossier que vous avez créé pour le projet, rentrez dans un terminal (une invite de commandes) et tapez :
 
