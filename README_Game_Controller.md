@@ -40,3 +40,8 @@ Pour finir, il suffit de rentrer cette commande :
 ```
 ./config.sh
 ```
+
+
+## Comment utiliser la manette de jeux ?
+
+Afin de pouvoir utiliser une manette de jeux (dans le cadre du projet, on se limitera à la manette de PS4 de chez *Sony*), il suffira simplement de la connecter par USB à sa machine, lancer le code et c'est parti !
