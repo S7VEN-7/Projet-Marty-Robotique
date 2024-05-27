@@ -9,11 +9,13 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MartyMainWindow,self).__init__(parent)
         self.setupUi(self)
-        self.myMarty = Marty("wifi", "192.168.0.100")
+        self.myMarty = Marty("wifi", "192.168.0.104")
         self.up.clicked.connect(self.avancer)
         self.down.clicked.connect(self.reculer)
         self.right.clicked.connect(self.droite)
         self.left.clicked.connect(self.gauche)
+        self.rotate_right.clicked.connect(self.demi_droite)
+        self.rotate_left.clicked.connect(self.demi_gauche)
     @pyqtSlot()
     def on_actionQuitter_triggered(self):
         self.close()
@@ -35,8 +37,9 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def gauche(self):
         self.myMarty.sidestep("left", 2)
     def demi_droite(self):
-        self.myMarty.walk(2, 'auto', 40, 30, 3000)
-        self.myMarty.walk(2, 'auto', 40, 30, 3000)
+        self.myMarty.walk(4, 'auto', -13, 30, 2000)
+    def demi_gauche(self):
+        self.myMarty.walk(4, 'auto', 13, 30, 2000)
     def keyPressEvent(self, event: QKeyEvent):
         key = event.key()
         if key == Qt.Key.Key_Z:
@@ -47,6 +50,8 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             self.reculer()
         elif key == Qt.Key.Key_D:
             self.droite()
-        elif key == Qt.Key.Key_C:
+        elif key == Qt.Key.Key_E:
             self.demi_droite()
+        elif key == Qt.Key.Key_A:
+            self.demi_gauche()
     
