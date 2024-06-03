@@ -5,6 +5,9 @@ from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtGui import QKeyEvent
 from martypy import Marty
 from ui_MainWindow import Ui_MainWindow
+
+import joystick
+
 class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MartyMainWindow,self).__init__(parent)
@@ -16,6 +19,10 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
         self.left.clicked.connect(self.gauche)
         self.rotate_right.clicked.connect(self.demi_droite)
         self.rotate_left.clicked.connect(self.demi_gauche)
+
+        self.controller = joystick.JoystickController()
+        self.controller.game_loop()
+
     @pyqtSlot()
     def on_actionQuitter_triggered(self):
         self.close()
