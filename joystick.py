@@ -21,7 +21,7 @@ class JoystickController(QMainWindow):
         self.timer.timeout.connect(self.game_loop)
         self.timer.start(16)  # 60 FPS
 
-        self.myMarty = Marty("wifi", "192.168.0.104")
+        self.myMarty = Marty("wifi", "192.168.0.106")
 
     def initUI(self):
         self.setWindowTitle("Joystick Controller")

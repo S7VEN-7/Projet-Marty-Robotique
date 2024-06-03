@@ -9,7 +9,7 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MartyMainWindow,self).__init__(parent)
         self.setupUi(self)
-        self.myMarty = Marty("wifi", "192.168.0.104")
+        self.myMarty = Marty("wifi", "192.168.0.106")
         self.up.clicked.connect(self.avancer)
         self.down.clicked.connect(self.reculer)
         self.right.clicked.connect(self.droite)
@@ -54,4 +54,18 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             self.demi_droite()
         elif key == Qt.Key.Key_A:
             self.demi_gauche()
+        elif key == Qt.Key.Key_B:
+            color = self.myMarty.get_ground_sensor_reading(add_on_or_side='left')
+            if(color < 12):
+                print("blanc")
+            if((color > 30) and (color <= 35)):
+                print("violet")
+            if((color > 35) and (color <= 37)):
+                print("vert")
+            if((color > 37) and (color <= 45)):
+                print("bleu")
+            if((color > 94) and (color <= 100)):
+                print("rouge")
+            if(color > 100):
+                print("jaune")
     

@@ -1,0 +1,6 @@
+/home/azymut/Desktop/3A/S2/Projet_Robotique/Projet-Marty-Robotique-/.venv/bin/python /home/azymut/Desktop/3A/S2/Projet_Robotique/Projet-Marty-Robotique-/app.py
+rouge:97
+jaune:111
+violet:34
+bleu:39
+vert:36
