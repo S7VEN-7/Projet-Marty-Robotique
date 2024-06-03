@@ -14,7 +14,10 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.two_marty = False
+        self.martyRobots = []
+
         self.myMarty1 = Marty("wifi", "192.168.0.106")
+        self.martyRobots.append(self.myMarty1)
         
         user_input = input("Voulez-vous connecter un deuxième Marty ? (Oui/Non) : ")
         while user_input != "Oui" and user_input != "Non":
@@ -23,8 +26,8 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
         if input == "Oui":
             self.two_marty = True
             self.myMarty2 = Marty("wifi", "192.168.0.104")
-        else :
-            self.myMarty2 = Marty()
+            self.martyRobots.append(self.myMarty2)
+
 
         self.up.clicked.connect(self.avancer)
         self.down.clicked.connect(self.reculer)
@@ -50,35 +53,29 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             event.ignore()
 
     def avancer(self):
-        self.myMarty1.walk(2, 'auto', 0)
-        if self.two_marty != True :
-            self.myMarty2.walk(2, 'auto', 0)
+        for marty in self.martyRobots:
+            marty.walk(2, 'auto', 0)
 
     def reculer(self):
-        self.myMarty1.walk(2, 'auto', 0, -25)
-        if self.two_marty != True :
-            self.myMarty2.walk(2, 'auto', 0, -25)
+        for marty in self.martyRobots:
+            marty.walk(2, 'auto', 0, -25)
 
     def droite(self):
-        self.myMarty1.sidestep("right", 2)
-        if self.two_marty != True :
-            self.myMarty2.sidestep("right", 2)
+        for marty in self.martyRobots:
+            marty.sidestep("right", 2)
 
     def gauche(self):
-        self.myMarty1.sidestep("left", 2)
-        if self.two_marty != True :
-            self.myMarty2.sidestep("left", 2)
+        for marty in self.martyRobots:
+            marty.sidestep("left", 2)
 
     def demi_droite(self):
-        self.myMarty1.walk(4, 'auto', -13, 30, 2000)
-        if self.two_marty != True :
-            self.myMarty2.walk(4, 'auto', -13, 30, 2000)
+        for marty in self.martyRobots:
+            marty.walk(4, 'auto', -13, 30, 2000)
     
     def demi_gauche(self):
-        self.myMarty1.walk(4, 'auto', 13, 30, 2000)
-        if self.two_marty != True :
-            self.myMarty2.walk(4, 'auto', 13, 30, 2000)
-    
+        for marty in self.martyRobots:
+            marty.walk(4, 'auto', 13, 30, 2000)
+
 
     def keyPressEvent(self, event: QKeyEvent):
         key = event.key()
@@ -94,3 +91,18 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             self.demi_droite()
         elif key == Qt.Key.Key_A:
             self.demi_gauche()
+        elif key == Qt.Key.Key_B:
+            color = self.myMarty.get_ground_sensor_reading(add_on_or_side='left')
+            if(color < 12):
+                print("blanc")
+            if((color > 30) and (color <= 35)):
+                print("violet")
+            if((color > 35) and (color <= 37)):
+                print("vert")
+            if((color > 37) and (color <= 45)):
+                print("bleu")
+            if((color > 94) and (color <= 100)):
+                print("rouge")
+            if(color > 100):
+                print("jaune")
+    
