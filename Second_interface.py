@@ -21,7 +21,7 @@ main_layout = QHBoxLayout(window)
 button_layout = QVBoxLayout()
 
 # Create 5 buttons with specified names and add them to the button layout
-button_names = ["avancer", "reculer", "circle_dance", "eyes", "piww", "arms"]
+button_names = ["avancer", "reculer", "tourner a droite", "tourner a gauch", "demi_droite", "demi_gauche"]
 buttons = []
 for name in button_names:
     button = DraggableButton(name)
