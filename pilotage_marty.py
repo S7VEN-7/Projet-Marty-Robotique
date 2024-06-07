@@ -69,7 +69,7 @@ class MartyController(QMainWindow):
 
 
 if __name__ == "__main__":
-    marty =Marty("wifi","192.168.0.101")
+    marty =Marty("wifi","192.168.0.106")
 
     if marty is None:
         print("Erreur: Marty n'est pas connecté")
