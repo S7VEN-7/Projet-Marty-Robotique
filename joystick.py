@@ -5,7 +5,7 @@ import os
 from martypy import Marty
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QWidget
 from PyQt6.QtCore import QTimer
-
+marty1_ip = input("IP du premier robot: ")
 class JoystickController(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -20,8 +20,7 @@ class JoystickController(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.game_loop)
         self.timer.start(16)  # 60 FPS
-
-        self.myMarty = Marty("wifi", "192.168.0.107")
+        self.myMarty = Marty("wifi", marty1_ip)
 
     def initUI(self):
         self.setWindowTitle("Joystick Controller")

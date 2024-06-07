@@ -7,7 +7,7 @@ from martypy import Marty
 from ui_MainWindow import Ui_MainWindow
 
 import joystick
-
+from joystick import marty1_ip
 class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MartyMainWindow,self).__init__(parent)
@@ -15,17 +15,18 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
 
         self.two_marty = False
         self.martyRobots = []
-
-        self.myMarty1 = Marty("wifi", "192.168.0.106")
+        
+        self.myMarty1 = Marty("wifi", marty1_ip)
         self.martyRobots.append(self.myMarty1)
         
         user_input = input("Voulez-vous connecter un deuxième Marty ? (Oui/Non) : ")
         while user_input != "Oui" and user_input != "Non":
             user_input = input("Voulez-vous connecter un deuxième Marty ? (Oui/Non) : ")
 
-        if input == "Oui":
+        if user_input == "Oui":
             self.two_marty = True
-            self.myMarty2 = Marty("wifi", "192.168.0.104")
+            marty2_ip = input("IP du deuxème robot: ")
+            self.myMarty2 = Marty("wifi", marty2_ip)
             self.martyRobots.append(self.myMarty2)
 
 
