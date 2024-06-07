@@ -11,6 +11,7 @@ class DropArea(QWidget):
         self.setStyleSheet(DROP_AREA_STYLE)
         self.setMinimumSize(400, 400)
         self.buttons = []
+        self.button_counters = {}
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasText():
@@ -19,16 +20,26 @@ class DropArea(QWidget):
     def dropEvent(self, event):
         if event.mimeData().hasText():
             button_text = event.mimeData().text()
-            existing_button = next((b for b in self.buttons if b.text() == button_text), None)
-            if existing_button:
-                existing_button.move(event.position().toPoint())
+
+            for button in self.buttons:
+                if button.text() == button_text:
+                    button.move(event.position().toPoint())
+                    button.show()
+                    event.acceptProposedAction()
+                    return
+
+            if button_text in self.button_counters:
+                self.button_counters[button_text] += 1
             else:
-                button = DraggableButton(button_text, self)
-                button.move(event.position().toPoint())
-                button.show()
-                button.dragged = True
-                button.setStyleSheet(COMMON_BUTTON_STYLE)  # Set the style to common style
-                self.buttons.append(button)
+                self.button_counters[button_text] = 1
+
+            unique_button_text = f"{button_text}{self.button_counters[button_text]}"
+            button = DraggableButton(unique_button_text, self)
+            button.move(event.position().toPoint())
+            button.show()
+            button.dragged = True
+            button.setStyleSheet(COMMON_BUTTON_STYLE)
+            self.buttons.append(button)
             event.acceptProposedAction()
 
     def mousePressEvent(self, event):
@@ -41,12 +52,12 @@ class DropArea(QWidget):
         if not marty:
             return
 
-        # Sort the buttons by their y-coordinate in ascending order (from top to bottom)
         self.buttons.sort(key=lambda button: button.y())
 
         def perform_next_action(index):
             if index < len(self.buttons):
-                perform_action(self.buttons[index].text(), marty)
+                base_action_name = ''.join(filter(lambda x: x.isalpha() or x == ' ' or x == '_', self.buttons[index].text())).strip()
+                perform_action(base_action_name, marty)
                 QTimer.singleShot(1000, lambda: perform_next_action(index + 1))
 
         perform_next_action(0)
@@ -56,3 +67,4 @@ class DropArea(QWidget):
             button = self.buttons.pop()
             button.reset_position()
             button.deleteLater()
+        self.button_counters.clear()

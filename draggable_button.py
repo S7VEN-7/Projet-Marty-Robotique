@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QPushButton, QApplication
 from PyQt6.QtGui import QFont, QMouseEvent, QDrag
-from PyQt6.QtCore import Qt , QMimeData
-from marty_controller import perform_action
+from PyQt6.QtCore import Qt, QMimeData
+
 class DraggableButton(QPushButton):
     def __init__(self, text, parent=None):
         super().__init__(text, parent)
