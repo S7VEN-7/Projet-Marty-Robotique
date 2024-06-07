@@ -86,6 +86,10 @@ class JoystickController(QMainWindow):
             elif button_name == "square":
                 self.joystick_rumble(0.65, 1, 250)
                 self.demi_gauche()
+            elif button_name == "touchpad":
+                self.danse()
+            elif button_name == "options":
+                self.myMarty.celebrate()
             elif button_name == "share":
                 self.running = False
                 self.close()
@@ -129,6 +133,9 @@ class JoystickController(QMainWindow):
     
     def demi_gauche(self):
         self.myMarty.walk(4, 'auto', 13, 30, 2000)
+
+    def danse(self):
+        self.myMarty.dance("right", 3000)
 
     def joystick_rumble(self, low, high, duration):
         self.joystick.rumble(low, high, duration)
