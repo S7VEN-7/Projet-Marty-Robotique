@@ -94,7 +94,7 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
         elif key == Qt.Key.Key_O:
             self.block()
         elif key == Qt.Key.Key_B:
-            color = self.myMarty.get_color_sensor_hex("left")
+            color = self.myMarty1.get_color_sensor_hex("left")
             if((color > "300000") and (color <= "339999")):
                 print("violet")
             if((color > "340000") and (color <= "390000")):
@@ -106,12 +106,12 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             if(color > "ab0000"):
                 print("jaune")
     def block(self):
-        color = self.myMarty.get_ground_sensor_reading(add_on_or_side='left')
+        color = self.myMarty1.get_ground_sensor_reading(add_on_or_side='left')
         print(color)
         self.avancer()
         self.avancer()
         self.avancer()
-        color = self.myMarty.get_ground_sensor_reading(add_on_or_side='left')
+        color = self.myMarty1.get_ground_sensor_reading(add_on_or_side='left')
         print(color)
         self.avancer()
         self.avancer()
