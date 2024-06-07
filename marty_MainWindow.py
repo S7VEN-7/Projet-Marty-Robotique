@@ -12,7 +12,7 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MartyMainWindow,self).__init__(parent)
         self.setupUi(self)
-        self.myMarty = Marty("wifi", "192.168.0.106")
+        self.myMarty = Marty("wifi", "192.168.0.107")
         self.up.clicked.connect(self.avancer)
         self.down.clicked.connect(self.reculer)
         self.right.clicked.connect(self.droite)
@@ -61,18 +61,34 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             self.demi_droite()
         elif key == Qt.Key.Key_A:
             self.demi_gauche()
+        elif key == Qt.Key.Key_O:
+            self.block()
         elif key == Qt.Key.Key_B:
-            color = self.myMarty.get_ground_sensor_reading(add_on_or_side='left')
-            if(color < 12):
-                print("blanc")
-            if((color > 30) and (color <= 35)):
+            color = self.myMarty.get_color_sensor_hex("left")
+            if((color > "300000") and (color <= "339999")):
                 print("violet")
-            if((color > 35) and (color <= 37)):
+            if((color > "340000") and (color <= "390000")):
                 print("vert")
-            if((color > 37) and (color <= 45)):
+            if((color > "3a0000") and (color <= "3fffff")):
                 print("bleu")
-            if((color > 94) and (color <= 100)):
+            if((color > "900000") and (color <= "a50000")):
                 print("rouge")
-            if(color > 100):
+            if(color > "ab0000"):
                 print("jaune")
-    
+    def block(self):
+        color = self.myMarty.get_ground_sensor_reading(add_on_or_side='left')
+        print(color)
+        self.avancer()
+        self.avancer()
+        self.avancer()
+        color = self.myMarty.get_ground_sensor_reading(add_on_or_side='left')
+        print(color)
+        self.avancer()
+        self.avancer()
+        
+    def get_color_sensor_hex(self, add_on_or_side: str) -> str:
+        [foot_on_ground, raw_data] = self._get_color_sensor_raw_data(add_on_or_side) # (clear, red, green, blue)
+        if len(raw_data) > 0:
+            hex_color = self.rgb_to_hex((raw_data[1], raw_data[2], raw_data[3]))
+            return hex_color
+        return 0
