@@ -24,11 +24,11 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
         self.myMarty1 = Marty("wifi", marty1_ip)
         self.martyRobots.append(self.myMarty1)
         
-        user_input = input("Voulez-vous connecter un deuxième Marty ? (Oui/Non) : ")
-        while user_input != "Oui" and user_input != "Non":
-            user_input = input("Voulez-vous connecter un deuxième Marty ? (Oui/Non) : ")
+        user_input = input("Voulez-vous connecter un deuxième Marty ? (Y/N) : ")
+        while user_input != "Y" and user_input != "N":
+            user_input = input("Voulez-vous connecter un deuxième Marty ? (Y/N) : ")
 
-        if user_input == "Oui":
+        if user_input == "Y":
             self.two_marty = True
             marty2_ip = input("IP du deuxème robot: ")
             self.myMarty2 = Marty("wifi", marty2_ip)
