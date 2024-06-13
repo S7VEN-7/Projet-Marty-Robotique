@@ -14,11 +14,17 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MartyMainWindow,self).__init__(parent)
         self.setupUi(self)
+        self.matrice_1 = np.array([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+        ])
         self.matrice_2 = np.array([
         [0, 0, 0],
         [0, 0, 0],
         [0, 0, 0]
         ])
+
         self.two_marty = False
         self.martyRobots = []
         self.myMarty1 = Marty("wifi", marty1_ip)
@@ -33,7 +39,6 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             marty2_ip = input("IP du deuxème robot: ")
             self.myMarty2 = Marty("wifi", marty2_ip)
             self.martyRobots.append(self.myMarty2)
-
 
         self.up.clicked.connect(self.avancer)
         self.down.clicked.connect(self.reculer)
@@ -68,11 +73,11 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
 
     def droite(self):
         for marty in self.martyRobots:
-            marty.sidestep("right", 7)
+            marty.sidestep("right", 8)
 
     def gauche(self):
         for marty in self.martyRobots:
-            marty.sidestep("left", 7)
+            marty.sidestep("left", 8)
 
     def demi_droite(self):
         for marty in self.martyRobots:
@@ -81,19 +86,16 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
     def demi_gauche(self):
         for marty in self.martyRobots:
             marty.walk(4, 'auto', 13, 30, 2000)
-    position = [1, 2]
+
+    position = [0, 2]
     """
-    matrice_marty1 = np.array([
-    [2, 2, 4],
-    [0, 0, 0],
-    [5, 5, 0]
-    ])
     matrice_marty2 = np.array([
     [0, 0, 0],
     [5, 4, 9],
     [0, 0, 2]
     ])
     """
+
     def keyPressEvent(self, event: QKeyEvent):
         key = event.key()
         if key == Qt.Key.Key_Z:
@@ -109,74 +111,143 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
         elif key == Qt.Key.Key_A:
             self.demi_gauche()
         elif key == Qt.Key.Key_O:
-            self.matrice_2 = self.mappage()
+            fusion = self.mappage()
+            self.matrice_1 = fusion[0]
+            self.matrice_2 = fusion[1]
+
         elif key == Qt.Key.Key_P:
-            self.check_path(self.matrice_2, self.matrice_2, self.position)
+            self.check_path(self.matrice_1, self.matrice_2, self.position)
         elif key == Qt.Key.Key_B:
             color = self.myMarty1.get_color_sensor_hex("left")
-            self.hexcolor(color)
-    
-    def hexcolor(self, color):
-        if(color < "200000"):
-            return 0
-        if((color >= "200000") and (color <= "311bff")):
-            return 1
-        if((color > "311bff") and (color <= "390000")):
-            return 2
-        if((color > "390000") and (color <= "750000")):
-            return 3
-        if((color > "750000") and (color <= "a50000")):
-            return 4
-        if(color > "ab0000"):
-            return 5
-    
+            print(color)
+
+    # pour Marty1
+    def hexcolor1(self, color):
+            if(color < "180000"): # couleur NOIR (aucune action)
+                return 0
+            if((color >= "180000") and (color <= "230000")): # couleur BLEU FONCÉ (vers la droite)
+                return 2
+            if((color > "230000") and (color <= "350000")): # couleur VERT (vers le haut)
+                return 5
+            if((color > "350000") and (color <= "500000")): # couleur BLEU CIEL (départ)
+                return -1
+            if((color > "500000") and (color <= "710000")): # couleur ROUGE (arrivée)
+                return 3
+            if((color > "710000") and (color <= "900000")): # couleur ROSE (vers la gauche)
+                return 1
+            if((color > "900000")): # couleur JAUNE (vers le bas)
+                return 4
+            
+    # pour Marty2
+    def hexcolor2(self, color):
+            if(color < "180000"): # couleur NOIR (aucune action)
+                return 0
+            if((color >= "180000") and (color <= "230000")): # couleur BLEU FONCÉ (vers la droite)
+                return 2
+            if((color > "230000") and (color <= "350000")): # couleur VERT (vers le haut)
+                return 5
+            if((color > "350000") and (color <= "500000")): # couleur BLEU CIEL (départ)
+                return -1
+            if((color > "500000") and (color <= "710000")): # couleur ROUGE (arrivée)
+                return 3
+            if((color > "710000") and (color <= "900000")): # couleur ROSE (vers la gauche)
+                return 1
+            if((color > "900000")): # couleur JAUNE (vers le bas)
+                return 4
+
     def mappage(self):
+        matrice_marty1 = np.array([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+        ])
         matrice_marty2 = np.array([
         [0, 0, 0],
         [0, 0, 0],
         [0, 0, 0]
         ])
+
         self.avancer()
-        time.sleep(7)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[1][0] = int(self.hexcolor(color))
-        print(color)
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[1][0] = int(self.hexcolor1(color1))
+        matrice_marty2[1][0] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
         self.avancer()
-        time.sleep(7)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[0][0] = int(self.hexcolor(color))
-        print(color)
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[0][0] = int(self.hexcolor1(color1))
+        matrice_marty2[0][0] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
         self.droite()
-        time.sleep(10)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[0][1] = int(self.hexcolor(color))
-        print(color)
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[0][1] = int(self.hexcolor1(color1))
+        matrice_marty2[0][1] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
         self.reculer()
-        time.sleep(7)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[1][1] = int(self.hexcolor(color))
-        print(color)
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[1][1] = int(self.hexcolor1(color1))
+        matrice_marty2[1][1] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
         self.reculer()
-        time.sleep(7)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[2][1] = int(self.hexcolor(color))
-        print(color)
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[2][1] = int(self.hexcolor1(color1))
+        matrice_marty2[2][1] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
         self.droite()
-        time.sleep(10)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[2][2] = int(self.hexcolor(color))
-        print(color)
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[2][2] = int(self.hexcolor1(color1))
+        matrice_marty2[2][2] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
         self.avancer()
-        time.sleep(7)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[1][2] = int(self.hexcolor(color))
-        print(color)
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[1][2] = int(self.hexcolor1(color1))
+        matrice_marty2[1][2] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
         self.avancer()
-        time.sleep(7)
-        color = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
-        matrice_marty2[0][2] = int(self.hexcolor(color))
-        print(color)
-        return matrice_marty2
+        self.myMarty1.stand_straight()
+        self.myMarty2.stand_straight()
+        time.sleep(2)
+        color1 = self.myMarty1.get_color_sensor_hex(add_on_or_side='left')
+        color2 = self.myMarty2.get_color_sensor_hex(add_on_or_side='left')
+        matrice_marty1[0][2] = int(self.hexcolor1(color1))
+        matrice_marty2[0][2] = int(self.hexcolor2(color2))
+        print(self.hexcolor1(color1), " ", self.hexcolor2(color2))
+
+        return matrice_marty1, matrice_marty2
         
     def get_color_sensor_hex(self, add_on_or_side: str) -> str:
         [foot_on_ground, raw_data] = self._get_color_sensor_raw_data(add_on_or_side) # (clear, red, green, blue)
@@ -184,6 +255,7 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
             hex_color = self.rgb_to_hex((raw_data[1], raw_data[2], raw_data[3]))
             return hex_color
         return 0
+    
     def check_path(self, matrice_marty1, matrice_marty2, pos):
         tabmouvement = []
         for i in range(matrice_marty1.shape[0]):
@@ -196,8 +268,8 @@ class MartyMainWindow(QMainWindow, Ui_MainWindow):
                     matrice_marty2[i][j] = temp1
                 print(matrice_marty1[i][j], end=" ")
             print()
-        deplacementx = pos[0];
-        deplacementy = pos[1];
+        deplacementx = pos[0]
+        deplacementy = pos[1]
         tab = [0 ,0 ,0 ,0]
         for i in range (4):
             if(i == 0):
