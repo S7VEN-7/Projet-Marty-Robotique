@@ -38,7 +38,7 @@ class JoystickController(QMainWindow):
 
     def initJoystick(self):
         if pygame.joystick.get_count() == 0:
-            print("No joystick connected. Please connect a joystick and restart the application.")
+            print("No joystick connected.")
             self.running = False
             return
         
